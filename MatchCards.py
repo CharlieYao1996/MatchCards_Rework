@@ -20,14 +20,18 @@ class MatchGame:
         self.attempts = 0
         self.time_elapset = 0
         self.timer_running = False
+        self.best_time = None
+        self.best_attempts = None
         #labels
         self.status_label = tk.Label(self.root, text = "Time : 0s | Attempts : 0")
         self.status_label.grid(row = 5, column = 0, columnspan = 10, pady = 10)
         self.finish_label = tk.Label(self.root, text = "Remember The Cards")
         self.finish_label.grid(row = 6, column = 0, columnspan = 10, pady = 10)
+        self.best_label = tk.Label(self.root, text ="")
+        self.best_label.grid(row = 7, column = 0, columnspan = 10, pady = 10)
         #Restart buttons
         self.restart_button = tk.Button(self.root, text = "Restart Game",command = self.reset_game)
-        self.restart_button.grid(row = 7, column = 0, columnspan = 10, pady = 10)
+        self.restart_button.grid(row = 8, column = 0, columnspan = 10, pady = 10)
         #Game start
         self.reset_game()
     def load_images(self):
@@ -93,6 +97,11 @@ class MatchGame:
         self.lock = False
         if(self.matchCount == 20):
             self.timer_running = False
+            if self.best_time is None or self.time_elapset < self.best_time:
+                self.best_time = self.time_elapset
+                self.best_attempts = self.attempts
+            self.status_label.config(text=f"Finished Time : {self.time_elapset}s | Attempts : {self.attempts}")
+            self.best_label.config(text=f"Best Time : {self.time_elapset}s | Attempts : {self.attempts}")
             self.finish_label.config(text="Congratulations!")
 if __name__ == "__main__":
     root = tk.Tk()
@@ -102,7 +111,7 @@ if __name__ == "__main__":
     window_height = root.winfo_screenheight()  
 
     width = 775
-    height = 550
+    height = 600
     left = int((window_width - width)/2)       
     top = int((window_height - height)/2)      
     root.geometry(f'{width}x{height}+{left}+{top}')
