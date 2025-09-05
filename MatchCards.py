@@ -1,18 +1,32 @@
 import tkinter as tk
-import random
+from PIL import Image, ImageTk
+import random, os
 class matchGame:
     def __init__(self,root):
         self.root = root
         self.root.title("matchGame")
+        #Load card images
+        self.images = {}
+        self.back_img = None
+        self.load_images()
+        #game state
         self.cards = []
         self.buttons = []
         self.lock = False
         self.flipped = []
         self.matched = [False for i in range(40)]
         self.matchCount = 0
+        #labels
         self.finish_label = tk.Label(self.root, text ="Remember The Cards")
         self.finish_label.grid(row = 5, column = 0, columnspan = 10, pady = 10)
         self.start()
+    def load_images(self):
+        for card in [f'{i}' for i in range(1,21)]:
+            path = os.path.join("images",f"{card}.png")
+            img = Image.open(path).resize((60,90))
+            self.images[card] = ImageTk.PhotoImage(img)
+        back_path = os.path.join("images", "back.png")
+        self.back_img = ImageTk.PhotoImage(Image.open(back_path).resize((60, 90)))
     def start(self):
         self.cards = [f'{i}' for i in range(1,21)] * 2
         random.shuffle(self.cards)
@@ -20,16 +34,16 @@ class matchGame:
         self.root.after(10000, self.hide_cards)
     def create_board(self):
         for i, card in enumerate(self.cards):
-            btn = tk.Button(self.root,text = card, width = 6, height = 3,command = lambda idx = i : self.flip(idx))
+            btn = tk.Button(self.root, image = self.images[self.cards[i]],command = lambda idx = i : self.flip(idx))
             btn.grid(row = i // 10, column = i % 10, padx = 5, pady = 5)
             self.buttons.append(btn)
     def hide_cards(self):
         for btn in self.buttons:
-            btn.config(text="")
+            btn.config(image=self.back_img)
     def flip(self, idx):
         if self.lock or idx in self.flipped or self.matched[idx]:
             return
-        self.buttons[idx].config(text = self.cards[idx])
+        self.buttons[idx].config(image = self.images[self.cards[idx]])
         self.flipped.append(idx)
         if len(self.flipped) == 2:
             self.lock = True
@@ -41,8 +55,8 @@ class matchGame:
             self.matched[self.flipped[1]] = True
             self.matchCount += 1
         else:
-            self.buttons[self.flipped[0]].config(text = "")
-            self.buttons[self.flipped[1]].config(text = "")
+            self.buttons[self.flipped[0]].config(image=self.back_img)
+            self.buttons[self.flipped[1]].config(image=self.back_img)
         self.flipped.clear()
         self.lock = False
         if(self.matchCount == 20):
@@ -54,8 +68,8 @@ if __name__ == "__main__":
     window_width = root.winfo_screenwidth()    
     window_height = root.winfo_screenheight()  
 
-    width = 630
-    height = 295
+    width = 775
+    height = 500
     left = int((window_width - width)/2)       
     top = int((window_height - height)/2)      
     root.geometry(f'{width}x{height}+{left}+{top}')
