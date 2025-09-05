@@ -12,7 +12,7 @@ class MatchGame:
         #game state
         self.cards = []
         self.buttons = []
-        self.lock = False
+        self.lock = True
         self.flipped = []
         self.matched = [False for i in range(40)]
         self.matchCount = 0
@@ -25,7 +25,11 @@ class MatchGame:
         self.status_label.grid(row = 5, column = 0, columnspan = 10, pady = 10)
         self.finish_label = tk.Label(self.root, text = "Remember The Cards")
         self.finish_label.grid(row = 6, column = 0, columnspan = 10, pady = 10)
-        self.prepare()
+        #Restart buttons
+        self.restart_button = tk.Button(self.root, text = "Restart Game",command = self.reset_game)
+        self.restart_button.grid(row = 7, column = 0, columnspan = 10, pady = 10)
+        #Game start
+        self.reset_game()
     def load_images(self):
         for card in [f'{i}' for i in range(1,21)]:
             path = os.path.join("images",f"{card}.png")
@@ -33,10 +37,20 @@ class MatchGame:
             self.images[card] = ImageTk.PhotoImage(img)
         back_path = os.path.join("images", "back.png")
         self.back_img = ImageTk.PhotoImage(Image.open(back_path).resize((60, 90)))
-    def prepare(self):
+    def reset_game(self):
         self.cards = [f'{i}' for i in range(1,21)] * 2
         random.shuffle(self.cards)
+        self.buttons = []
+        self.lock = True
+        self.flipped.clear()
+        self.matched = [False for i in range(40)]
+        self.matchCount = 0
+        self.attempts = 0
+        self.time_elapset = 0
+        self.timer_running = False
         self.create_board()
+        self.status_label.config(text = "Time : 0s | Attempts : 0")
+        self.finish_label.config(text = "Remember The Cards")
         self.root.after(10000, self.start)
     def create_board(self):
         for i, card in enumerate(self.cards):
@@ -45,6 +59,8 @@ class MatchGame:
             self.buttons.append(btn)
     def start(self):
         self.hide_cards()
+        self.finish_label.config(text = "")
+        self.lock = False
         self.timer_running = True
         self.update_timer()        
     def hide_cards(self):
@@ -86,7 +102,7 @@ if __name__ == "__main__":
     window_height = root.winfo_screenheight()  
 
     width = 775
-    height = 500
+    height = 550
     left = int((window_width - width)/2)       
     top = int((window_height - height)/2)      
     root.geometry(f'{width}x{height}+{left}+{top}')
