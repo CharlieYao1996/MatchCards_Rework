@@ -16,7 +16,7 @@ There are two ways to play this game:
 2. **Run the Executable**
    - Just double-click `MatchCards.exe`.
 
-**Note**: The image files are a must.
+**Note**: The image files are a must. 
 You can replace them with your own images, but the file names must be:
 `1.png` ~ `20.png` and `back.png`.
 
