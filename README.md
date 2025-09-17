@@ -14,9 +14,9 @@ There are two ways to play this game:
      ```
 
 2. **Run the Executable**
-   - Just double-click `MatchCards.exe`.
+   - Just run the `MatchCards.exe`.
 
-**Note**: The image files are a must.  
+**Note**: The image files is a must.  
 You can replace them with your own images, but the file names must be:
 `1.png` ~ `20.png` and `back.png`.
 
@@ -28,7 +28,7 @@ You can replace them with your own images, but the file names must be:
 - Then the game begins, with a **timer** and an **attempt counter**.
 - Flip two cards:
   - If they **match**, they stay open.
-  - If not, they will close again.
+  - If not, they will close back.
 - Each new game (whether at launch or after pressing restart) will **shuffle the cards randomly**.
 - Match all pairs to win! 
 - The game will remember your **best record**.
